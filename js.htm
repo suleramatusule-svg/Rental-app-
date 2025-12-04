@@ -1,0 +1,520 @@
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Rental Connect</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+        }
+
+        .property-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .property-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .property-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .payment-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .currency-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .currency-btn {
+            padding: 8px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .currency-btn.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .refund-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+            margin-top: 20px;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .property-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Uniconnect Rental App</h1>
+            <p class="tagline">Easy connections between students and landlords - Pay in any currency!</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('browse')">Browse Properties</button>
+            <button class="tab-btn" onclick="showTab('landlord')">List Property</button>
+            <button class="tab-btn" onclick="showTab('payment')">Make Payment</button>
+            <button class="tab-btn" onclick="showTab('refund')">Request Refund</button>
+        </div>
+
+        <!-- Browse Properties -->
+        <div id="browse" class="content-section active">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Available Properties</h2>
+            <div id="propertyList">
+                <div class="property-card">
+                    <h3>Cozy Studio Near Campus</h3>
+                    <div class="property-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Price/Month</div>
+                            <div>$800 / €720 / £650</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div>Downtown, 5 min to campus</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Type</div>
+                            <div>Studio Apartment</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Available</div>
+                            <div>Immediately</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px; color: #666;">Furnished studio with WiFi, utilities included. Perfect for students!</p>
+                </div>
+
+                <div class="property-card">
+                    <h3>Shared House with 3 Bedrooms</h3>
+                    <div class="property-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Price/Month</div>
+                            <div>$600 / €540 / £490</div>                                                                                                                                                            
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div>Suburb, 15 min bus ride</div>                            
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Type</div>
+                            <div>Shared House</div>
+                                                                                </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Available</div>
+                            <div>From January</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px; color: #666;">Spacious room in friendly house. Kitchen, laundry, parking available.</p>
+                                                                                                                                                                                                                                                                                </div>
+            </div>
+        </div>
+                                                                                                                     
+        <!-- List Property (Landlord) -->
+        <div id="landlord" class="content-section">
+            <h2 style="margin-bottom: 20px; color: #667eea;">List Your Property</h2>
+            <form onsubmit="submitProperty(event)">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Property Title</label>
+                        <input type="text" placeholder="e.g., Cozy Studio Near Campus" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Property Type</label>
+                        <select required>
+                            <option value="">Select type...</option>
+                            <option>Studio Apartment</option>
+                            <option>1 Bedroom</option>
+                            <option>2 Bedroom</option>
+                            <option>Shared House</option>
+                            <option>Single Room</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Monthly Rent (USD)</label>
+                        <input type="number" placeholder="800" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" placeholder="Address or area" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea placeholder="Describe your property, amenities, nearby facilities..." required></textarea>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Available From</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Deposit Required</label>
+                        <input type="number" placeholder="800" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Contact Email</label>
+                    <input type="email" placeholder="landlord@example.com" required>
+                </div>
+
+                <button type="submit" class="btn">List Property</button>
+                <div class="success-msg" id="landlordSuccess">✅ Property listed successfully!</div>
+            </form>
+        </div>
+
+        <!-- Payment -->
+        <div id="payment" class="content-section">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Make a Payment</h2>
+            <form onsubmit="processPayment(event)">
+                <div class="form-group">
+                    <label>Select Property</label>
+                    <select required>
+                        <option value="">Choose property...</option>
+                        <option>Cozy Studio Near Campus</option>
+                        <option>Shared House with 3 Bedrooms</option>
+                    </select>
+                </div>
+
+                <div class="payment-form">
+                    <label style="margin-bottom: 15px; display: block;">Select Currency</label>
+                    <div class="currency-selector">
+                        <button type="button" class="currency-btn selected" onclick="selectCurrency(this, 'USD')">$ USD</button>
+                        <button type="button" class="currency-btn" onclick="selectCurrency(this, 'EUR')">€ EUR</button>
+                        <button type="button" class="currency-btn" onclick="selectCurrency(this, 'GBP')">£ GBP</button>
+                        <button type="button" class="currency-btn" onclick="selectCurrency(this, 'INR')">₹ INR</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="paymentAmount" placeholder="800" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cardholder Name</label>
+                        <input type="text" placeholder="John Doe" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="text" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Process Payment</button>
+                <div class="success-msg" id="paymentSuccess">✅ Payment processed successfully!</div>
+            </form>
+        </div>
+
+        <!-- Refund Request -->
+        <div id="refund" class="content-section">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Request a Refund</h2>
+            
+            <div class="refund-section">
+                <h3 style="margin-bottom: 10px;">📋 Refund Policy</h3>
+                <p>Refunds may be issued if the property condition doesn't match the listing or if there are health and safety issues.</p>
+            </div>
+
+            <form onsubmit="submitRefund(event)" style="margin-top: 30px;">
+                <div class="form-group">
+                    <label>Property Address</label>
+                    <input type="text" placeholder="Enter property address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Reason for Refund</label>
+                    <select required>
+                        <option value="">Select reason...</option>
+                        <option>Property condition worse than described</option>
+                        <option>Health and safety issues</option>
+                        <option>Essential amenities not working</option>
+                        <option>Misleading listing information</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Detailed Description</label>
+                    <textarea placeholder="Please describe the issues in detail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount to Refund</label>
+                    <input type="number" placeholder="800" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Email</label>
+                    <input type="email" placeholder="student@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Refund Method</label>
+                    <select required>
+                        <option value="">Select method...</option>
+                        <option>Original payment method</option>
+                        <option>Bank transfer</option>
+                        <option>PayPal</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Submit Refund Request</button>
+                <div class="success-msg" id="refundSuccess">✅ Refund request submitted! You'll hear back within 3-5 business days.</div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let selectedCurrency = 'USD';
+
+        function showTab(tabName) {
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            sections.forEach(section => section.classList.remove('active'));
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function selectCurrency(btn, currency) {
+            document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCurrency = currency;
+        }
+
+        function submitProperty(e) {
+            e.preventDefault();
+            document.getElementById('landlordSuccess').style.display = 'block';
+            setTimeout(() => {
+                e.target.reset();
+                document.getElementById('landlordSuccess').style.display = 'none';
+            }, 3000);
+        }
+
+        function processPayment(e) {
+            e.preventDefault();
+            document.getElementById('paymentSuccess').style.display = 'block';
+            setTimeout(() => {
+                e.target.reset();
+                document.getElementById('paymentSuccess').style.display = 'none';
+            }, 3000);
+        }
+
+        function submitRefund(e) {
+            e.preventDefault();
+            document.getElementById('refundSuccess').style.display = 'block';
+            setTimeout(() => {
+                e.target.reset();
+                document.getElementById('refundSuccess').style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
