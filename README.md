@@ -13,3 +13,9 @@ Run the following commands from the root directory of the project:
 A link would appear which can then be used to access the landing page and other related pages.
 
 File: [web_server/app.py](./web_server/app.py)
+
+### Database management
+
+Database management is handled in the folder [models](./models/) in which the various tables in the database are declared as well as the database created. This folder also handles the database management
+
+Directory: [models](./models/)

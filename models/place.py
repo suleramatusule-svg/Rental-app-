@@ -27,10 +27,12 @@ class Place(BaseModel, Base):
     description = Column(String(1024), nullable=True)
     number_rooms = Column(Integer, nullable=False, default=0)
     number_bathrooms = Column(Integer, nullable=False, default=0)
-    max_guest = Column(Integer, nullable=False, default=0)
-    price_by_night = Column(Integer, nullable=False, default=0)
+    # max_guest = Column(Integer, nullable=False, default=0)
+    price_by_month = Column(Integer, nullable=False, default=0)
+    price_by_year = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
+    landmarks = Column(String(1024), nullable=False)
     reviews = relationship("Review",
                             backref="place",
                             cascade="all, delete, delete-orphan")
