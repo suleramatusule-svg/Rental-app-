@@ -10,5 +10,6 @@ Run the following commands from the root directory of the project:
 - `source server-side/bin/activate` to load the virtual environment
 - `python3 -m web_server.app` or `python -m web_server.app`
 
-A link would appear which can then be used to access the landing page.
+A link would appear which can then be used to access the landing page and other related pages.
 
+File: [web_server/app.py](./web_server/app.py)
