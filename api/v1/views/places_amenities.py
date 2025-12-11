@@ -7,12 +7,14 @@ from api.v1.views import app_views
 from os import environ
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
+from flask_jwt_extended import jwt_required
 
 
 @app_views.route('places/<place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
 @swag_from('documentation/place_amenity/get_places_amenities.yml',
            methods=['GET'])
+@jwt_required()
 def get_place_amenities(place_id):
     """
     Retrieves the list of all Amenity objects of a Place
@@ -35,6 +37,7 @@ def get_place_amenities(place_id):
                  methods=['DELETE'], strict_slashes=False)
 @swag_from('documentation/place_amenity/delete_place_amenities.yml',
            methods=['DELETE'])
+@jwt_required()
 def delete_place_amenity(place_id, amenity_id):
     """
     Deletes a Amenity object of a Place
@@ -66,6 +69,7 @@ def delete_place_amenity(place_id, amenity_id):
                  strict_slashes=False)
 @swag_from('documentation/place_amenity/post_place_amenities.yml',
            methods=['POST'])
+@jwt_required()
 def post_place_amenity(place_id, amenity_id):
     """
     Link a Amenity object to a Place

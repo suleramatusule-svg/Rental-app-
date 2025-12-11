@@ -67,6 +67,10 @@ class BaseModel:
         if save_fs is None:
             if "password" in new_dict:
                 del new_dict["password"]
+        for key in new_dict:
+            if 'scrypt' in key:
+                del new_dict[key]
+                break
         return new_dict
 
     def delete(self):

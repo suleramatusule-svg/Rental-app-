@@ -7,11 +7,19 @@ from flask import Flask, render_template, make_response, jsonify
 from flask_cors import CORS
 from flasgger import Swagger
 from flasgger.utils import swag_from
+from flask_jwt_extended import JWTManager
+from uuid import uuid4
+from datetime import timedelta
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+
+# -- JWT Config --
+app.config["JWT_SECRET_KEY"] = str(uuid4())
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+jwt = JWTManager(app)
 
 @app.teardown_appcontext
 def close_db(error):
@@ -39,10 +47,10 @@ Swagger(app)
 
 if __name__ == "__main__":
     """ Main Function """
-    host = environ.get('HBNB_API_HOST')
-    port = environ.get('HBNB_API_PORT')
+    host = environ.get('RENTAL_API_HOST')
+    port = environ.get('RENTAL_API_PORT')
     if not host:
         host = '0.0.0.0'
     if not port:
-        port = '5000'
+        port = '5050'
     app.run(host=host, port=port, threaded=True)

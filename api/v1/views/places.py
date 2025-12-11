@@ -9,11 +9,13 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
 @swag_from('documentation/place/get_places.yml', methods=['GET'])
+@jwt_required()
 def get_places(city_id):
     """
     Retrieves the list of all Place objects of a City
@@ -30,6 +32,7 @@ def get_places(city_id):
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/place/get_place.yml', methods=['GET'])
+@jwt_required()
 def get_place(place_id):
     """
     Retrieves a Place object
@@ -44,6 +47,7 @@ def get_place(place_id):
 @app_views.route('/places/<place_id>', methods=['DELETE'],
                  strict_slashes=False)
 @swag_from('documentation/place/delete_place.yml', methods=['DELETE'])
+@jwt_required()
 def delete_place(place_id):
     """
     Deletes a Place Object
@@ -63,6 +67,7 @@ def delete_place(place_id):
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
                  strict_slashes=False)
 @swag_from('documentation/place/post_place.yml', methods=['POST'])
+@jwt_required()
 def post_place(city_id):
     """
     Creates a Place
@@ -95,6 +100,7 @@ def post_place(city_id):
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 @swag_from('documentation/place/put_place.yml', methods=['PUT'])
+@jwt_required()
 def put_place(place_id):
     """
     Updates a Place
@@ -119,6 +125,7 @@ def put_place(place_id):
 
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 @swag_from('documentation/place/post_search.yml', methods=['POST'])
+@jwt_required()
 def places_search():
     """
     Retrieves all Place objects depending of the JSON in the body

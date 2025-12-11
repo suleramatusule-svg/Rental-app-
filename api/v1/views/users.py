@@ -3,12 +3,15 @@
 from models.user import User
 from models import storage
 from api.v1.views import app_views
-from flask import abort, jsonify, make_response, request
+from flask import abort, jsonify, make_response, request, redirect, url_for
 from flasgger.utils import swag_from
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/user/all_users.yml')
+@jwt_required()
 def get_users():
     """
     Retrieves the list of all user objects
@@ -23,6 +26,7 @@ def get_users():
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/user/get_user.yml', methods=['GET'])
+@jwt_required()
 def get_user(user_id):
     """ Retrieves an user """
     user = storage.get(User, user_id)
@@ -35,6 +39,7 @@ def get_user(user_id):
 @app_views.route('/users/<user_id>', methods=['DELETE'],
                  strict_slashes=False)
 @swag_from('documentation/user/delete_user.yml', methods=['DELETE'])
+@jwt_required()
 def delete_user(user_id):
     """
     Deletes a user Object
@@ -66,6 +71,7 @@ def post_user():
         abort(400, description="Missing password")
 
     data = request.get_json()
+    data['password'] = generate_password_hash(data['password'])
     instance = User(**data)
     instance.save()
     return make_response(jsonify(instance.to_dict()), 201)
@@ -73,6 +79,7 @@ def post_user():
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 @swag_from('documentation/user/put_user.yml', methods=['PUT'])
+@jwt_required()
 def put_user(user_id):
     """
     Updates a user
@@ -90,6 +97,8 @@ def put_user(user_id):
     data = request.get_json()
     for key, value in data.items():
         if key not in ignore:
+            if key == 'password':
+                key = generate_password_hash(key)
             setattr(user, key, value)
     storage.save()
     return make_response(jsonify(user.to_dict()), 200)

@@ -19,3 +19,7 @@ File: [web_server/app.py](./web_server/app.py)
 Database management is handled in the folder [models](./models/) in which the various tables in the database are declared as well as the database created. This folder also handles the database management
 
 Directory: [models](./models/)
+
+### Log in
+
+Log in is handled using session auth. Log in parameters are username and password
