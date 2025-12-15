@@ -40,8 +40,9 @@ def login_user():
         # return jsonify({"message": "Invalid email or password"}), 401
 
     # Create the access token for the logged-in user
-    iden = user.to_dict()
-    access_token = create_access_token(identity=iden)
+    # iden = user.to_dict()
+    # access_token = create_access_token(identity=iden)
+    access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token), 200
 
 @app_views.route("/dashboard", methods=["GET"])
@@ -52,8 +53,11 @@ def user_dashboard():
     Returns a personalized welcome message for the user
     """
     current_user = get_jwt_identity()
-    current_user_name = current_user['name']
     return jsonify({
-        "name": current_user_name,
-        "all": current_user
+        "id": current_user
     }), 200
+    # current_user_name = current_user['name']
+    # return jsonify({
+    #     "name": current_user_name,
+    #     "all": current_user
+    # }), 200

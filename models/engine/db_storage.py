@@ -60,6 +60,10 @@ class DBStorage:
         """commit all changes of the current database session"""
         self.__session.commit()
 
+    def rollback(self):
+        """ rollback changes in the event of an error """
+        self.__session.rollback()
+
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
         if obj is not None:

@@ -10,6 +10,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
+from sqlalchemy.exc import IntegrityError
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -53,6 +54,10 @@ class BaseModel:
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
+
+    def rollback(self):
+        """ Rolls back all changes made to the database in the event of an error """
+        models.storage.rollback()
 
     def to_dict(self, save_fs=None):
         """returns a dictionary containing all keys/values of the instance"""

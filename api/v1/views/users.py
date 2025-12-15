@@ -7,6 +7,7 @@ from flask import abort, jsonify, make_response, request, redirect, url_for
 from flasgger.utils import swag_from
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from sqlalchemy.exc import IntegrityError
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
@@ -72,8 +73,12 @@ def post_user():
 
     data = request.get_json()
     data['password'] = generate_password_hash(data['password'])
-    instance = User(**data)
-    instance.save()
+    try:
+        instance = User(**data)
+        instance.save()
+    except IntegrityError:
+        instance.rollback()
+        return make_response(jsonify({"error": "This user already exists"}), 409)
     return make_response(jsonify(instance.to_dict()), 201)
 
 
