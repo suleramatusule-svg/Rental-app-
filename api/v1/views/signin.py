@@ -52,12 +52,11 @@ def user_dashboard():
     A protected route that requires a valid JWT access Token.
     Returns a personalized welcome message for the user
     """
-    current_user = get_jwt_identity()
+    current_user_id = get_jwt_identity()
+    user = storage.get(User, current_user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+        
     return jsonify({
-        "id": current_user
+        "all": user.to_dict()
     }), 200
-    # current_user_name = current_user['name']
-    # return jsonify({
-    #     "name": current_user_name,
-    #     "all": current_user
-    # }), 200

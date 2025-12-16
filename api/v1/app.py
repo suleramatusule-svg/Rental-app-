@@ -5,8 +5,8 @@ from api.v1.views import app_views
 from os import environ
 from flask import Flask, render_template, make_response, jsonify
 from flask_cors import CORS
-from flasgger import Swagger
-from flasgger.utils import swag_from
+#from flasgger import Swagger
+# from flasgger.utils import swag_from
 from flask_jwt_extended import JWTManager
 from uuid import uuid4
 from datetime import timedelta
@@ -42,7 +42,7 @@ app.config['SWAGGER'] = {
     'uiversion': 3
 }
 
-Swagger(app)
+#Swagger(app)
 
 
 if __name__ == "__main__":

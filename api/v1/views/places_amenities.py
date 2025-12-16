@@ -6,14 +6,14 @@ from models import storage
 from api.v1.views import app_views
 from os import environ
 from flask import abort, jsonify, make_response, request
-from flasgger.utils import swag_from
+#from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required
 
 
+#@swag_from('documentation/place_amenity/get_places_amenities.yml',
+#methods=['GET'])
 @app_views.route('places/<place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/place_amenity/get_places_amenities.yml',
-           methods=['GET'])
 @jwt_required()
 def get_place_amenities(place_id):
     """
@@ -33,10 +33,10 @@ def get_place_amenities(place_id):
     return jsonify(amenities)
 
 
+#@swag_from('documentation/place_amenity/delete_place_amenities.yml',
+           #methods=['DELETE'])
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['DELETE'], strict_slashes=False)
-@swag_from('documentation/place_amenity/delete_place_amenities.yml',
-           methods=['DELETE'])
 @jwt_required()
 def delete_place_amenity(place_id, amenity_id):
     """
@@ -65,10 +65,10 @@ def delete_place_amenity(place_id, amenity_id):
     return make_response(jsonify({}), 200)
 
 
+#@swag_from('documentation/place_amenity/post_place_amenities.yml',
+#           methods=['POST'])
 @app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/place_amenity/post_place_amenities.yml',
-           methods=['POST'])
 @jwt_required()
 def post_place_amenity(place_id, amenity_id):
     """

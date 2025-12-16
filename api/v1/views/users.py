@@ -4,14 +4,14 @@ from models.user import User
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request, redirect, url_for
-from flasgger.utils import swag_from
+#from flasgger.utils import swag_from
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from sqlalchemy.exc import IntegrityError
 
 
+#@swag_from('documentation/user/all_users.yml')
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/user/all_users.yml')
 @jwt_required()
 def get_users():
     """
@@ -25,8 +25,8 @@ def get_users():
     return jsonify(list_users)
 
 
+#@swag_from('documentation/user/get_user.yml', methods=['GET'])
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/user/get_user.yml', methods=['GET'])
 @jwt_required()
 def get_user(user_id):
     """ Retrieves an user """
@@ -37,9 +37,9 @@ def get_user(user_id):
     return jsonify(user.to_dict())
 
 
+#@swag_from('documentation/user/delete_user.yml', methods=['DELETE'])
 @app_views.route('/users/<user_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/user/delete_user.yml', methods=['DELETE'])
 @jwt_required()
 def delete_user(user_id):
     """
@@ -57,8 +57,8 @@ def delete_user(user_id):
     return make_response(jsonify({}), 200)
 
 
+#@swag_from('documentation/user/post_user.yml', methods=['POST'])
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
-@swag_from('documentation/user/post_user.yml', methods=['POST'])
 def post_user():
     """
     Creates a user
@@ -82,8 +82,8 @@ def post_user():
     return make_response(jsonify(instance.to_dict()), 201)
 
 
+#@swag_from('documentation/user/put_user.yml', methods=['PUT'])
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/user/put_user.yml', methods=['PUT'])
 @jwt_required()
 def put_user(user_id):
     """

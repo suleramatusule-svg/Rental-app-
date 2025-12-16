@@ -5,13 +5,14 @@ from models.state import State
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
-from flasgger.utils import swag_from
+#from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
+
+#@swag_from('documentation/city/cities_by_state.yml', methods=['GET'])
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/city/cities_by_state.yml', methods=['GET'])
 @jwt_required()
 def get_cities(state_id):
     """
@@ -28,8 +29,8 @@ def get_cities(state_id):
     return jsonify(list_cities)
 
 
+#@swag_from('documentation/city/get_city.yml', methods=['GET'])
 @app_views.route('/cities/<city_id>/', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/city/get_city.yml', methods=['GET'])
 @jwt_required()
 def get_city(city_id):
     """
@@ -41,8 +42,8 @@ def get_city(city_id):
     return jsonify(city.to_dict())
 
 
+#@swag_from('documentation/city/delete_city.yml', methods=['DELETE'])
 @app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
-@swag_from('documentation/city/delete_city.yml', methods=['DELETE'])
 @jwt_required()
 def delete_city(city_id):
     """
@@ -58,9 +59,9 @@ def delete_city(city_id):
     return make_response(jsonify({}), 200)
 
 
+#@swag_from('documentation/city/post_city.yml', methods=['POST'])
 @app_views.route('/states/<state_id>/cities', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/city/post_city.yml', methods=['POST'])
 @jwt_required()
 def post_city(state_id):
     """
@@ -81,8 +82,8 @@ def post_city(state_id):
     return make_response(jsonify(instance.to_dict()), 201)
 
 
+#@swag_from('documentation/city/put_city.yml', methods=['PUT'])
 @app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/city/put_city.yml', methods=['PUT'])
 @jwt_required()
 def put_city(city_id):
     """

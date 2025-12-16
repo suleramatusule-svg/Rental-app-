@@ -6,7 +6,8 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import PropertyDetailPage from './pages/PropertyDetailPage';
 import LandingPage from './pages/LandingPage';
 import SettingsPage from './pages/SettingsPage';
-import { LoginPage, SignupPage, DashboardPage, ListPropertyPage } from './pages/Placeholders';
+import DashboardPage from './pages/DashboardPage';
+import { LoginPage, SignupPage, ListPropertyPage } from './pages/Placeholders';
 
 // Protected Route Wrapper
 const RequireAuth = ({ children }) => {
@@ -33,6 +34,7 @@ const Navigation = () => {
 
                 <div className="hidden md:flex items-center gap-8 text-slate-600 font-medium">
                     <Link to="/search" className="hover:text-primary transition-colors">Find a Home</Link>
+                    <Link to="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link>
                     <Link to="/list-property" className="hover:text-primary transition-colors">List Property</Link>
                 </div>
 

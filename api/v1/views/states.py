@@ -4,12 +4,12 @@ from models.state import State
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
-from flasgger.utils import swag_from
+#from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required
 
 
+#@swag_from('documentation/state/get_state.yml', methods=['GET'])
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/state/get_state.yml', methods=['GET'])
 @jwt_required()
 def get_states():
     """
@@ -22,8 +22,8 @@ def get_states():
     return jsonify(list_states)
 
 
+#@swag_from('documentation/state/get_id_state.yml', methods=['get'])
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/state/get_id_state.yml', methods=['get'])
 @jwt_required()
 def get_state(state_id):
     """ Retrieves a specific State """
@@ -34,9 +34,9 @@ def get_state(state_id):
     return jsonify(state.to_dict())
 
 
+##@swag_from('documentation/state/delete_state.yml', methods=['DELETE'])
 @app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/state/delete_state.yml', methods=['DELETE'])
 @jwt_required()
 def delete_state(state_id):
     """
@@ -54,8 +54,8 @@ def delete_state(state_id):
     return make_response(jsonify({}), 200)
 
 
+#@swag_from('documentation/state/post_state.yml', methods=['POST'])
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
-@swag_from('documentation/state/post_state.yml', methods=['POST'])
 @jwt_required()
 def post_state():
     """
@@ -73,8 +73,8 @@ def post_state():
     return make_response(jsonify(instance.to_dict()), 201)
 
 
+#j@swag_from('documentation/state/put_state.yml', methods=['PUT'])
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/state/put_state.yml', methods=['PUT'])
 @jwt_required()
 def put_state(state_id):
     """

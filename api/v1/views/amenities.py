@@ -4,12 +4,12 @@ from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
-from flasgger.utils import swag_from
+#from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required
 
 
+#@swag_from('documentation/amenity/all_amenities.yml')
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/amenity/all_amenities.yml')
 @jwt_required()
 def get_amenities():
     """
@@ -22,9 +22,9 @@ def get_amenities():
     return jsonify(list_amenities)
 
 
+#@swag_from('documentation/amenity/get_amenity.yml', methods=['GET'])
 @app_views.route('/amenities/<amenity_id>/', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/amenity/get_amenity.yml', methods=['GET'])
 @jwt_required()
 def get_amenity(amenity_id):
     """ Retrieves an amenity """
@@ -35,9 +35,9 @@ def get_amenity(amenity_id):
     return jsonify(amenity.to_dict())
 
 
+#@swag_from('documentation/amenity/delete_amenity.yml', methods=['DELETE'])
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/amenity/delete_amenity.yml', methods=['DELETE'])
 @jwt_required()
 def delete_amenity(amenity_id):
     """
@@ -55,8 +55,8 @@ def delete_amenity(amenity_id):
     return make_response(jsonify({}), 200)
 
 
+#@swag_from('documentation/amenity/post_amenity.yml', methods=['POST'])
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
-@swag_from('documentation/amenity/post_amenity.yml', methods=['POST'])
 @jwt_required()
 def post_amenity():
     """
@@ -74,9 +74,9 @@ def post_amenity():
     return make_response(jsonify(instance.to_dict()), 201)
 
 
+#@swag_from('documentation/amenity/put_amenity.yml', methods=['PUT'])
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],
                  strict_slashes=False)
-@swag_from('documentation/amenity/put_amenity.yml', methods=['PUT'])
 @jwt_required()
 def put_amenity(amenity_id):
     """
