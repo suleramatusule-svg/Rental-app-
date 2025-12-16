@@ -21,6 +21,10 @@ const ListPropertyPage = () => {
     const [selectedCity, setSelectedCity] = useState('');
     const [newCityName, setNewCityName] = useState('');
 
+    const [amenities, setAmenities] = useState([]);
+    const [selectedAmenities, setSelectedAmenities] = useState(new Set());
+    const [newAmenityName, setNewAmenityName] = useState('');
+
     const [listingData, setListingData] = useState({
         name: '',
         description: '',
@@ -32,13 +36,15 @@ const ListPropertyPage = () => {
         longitude: 0,
     });
 
-    // Step 1: Fetch States on Mount
+    // Step 1: Fetch States and Amenities on Mount
     useEffect(() => {
-        const loadStates = async () => {
-            const data = await propertyService.fetchStates();
-            setStates(data);
+        const loadInitialData = async () => {
+            const statesData = await propertyService.fetchStates();
+            setStates(statesData);
+            const amenitiesData = await propertyService.fetchAmenities();
+            setAmenities(amenitiesData);
         };
-        loadStates();
+        loadInitialData();
     }, []);
 
     // Fetch cities when state changes
@@ -83,19 +89,30 @@ const ListPropertyPage = () => {
                 setSelectedState(stateId);
                 setSelectedCity(cityId);
                 setStep(2);
+                setSelectedCity(cityId);
+                setStep(2);
             } else if (step === 2) {
                 // Validation for Step 2
                 if (!listingData.name) throw new Error("Property title is required");
                 if (!listingData.description) throw new Error("Description is required");
                 if (!listingData.price_by_month) throw new Error("Monthly price is required");
 
+                setStep(3);
+            } else if (step === 3) {
                 // Submit
-                await propertyService.createListing({
+                const newPlace = await propertyService.createListing({
                     ...listingData,
                     city_id: selectedCity,
                     user_id: user.id,
                     landmarks: "Not specified"
                 });
+
+                // Link Amenities
+                if (selectedAmenities.size > 0) {
+                    await Promise.all(Array.from(selectedAmenities).map(amenityId =>
+                        propertyService.linkAmenityToPlace(newPlace.id, amenityId)
+                    ));
+                }
 
                 navigate('/dashboard');
             }
@@ -123,6 +140,8 @@ const ListPropertyPage = () => {
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-primary text-white' : 'bg-slate-200 text-slate-500'}`}>1</div>
                 <div className={`flex-1 h-1 mx-2 ${step >= 2 ? 'bg-primary' : 'bg-slate-200'}`}></div>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${step >= 2 ? 'bg-primary text-white' : 'bg-slate-200 text-slate-500'}`}>2</div>
+                <div className={`flex-1 h-1 mx-2 ${step >= 3 ? 'bg-primary' : 'bg-slate-200'}`}></div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${step >= 3 ? 'bg-primary text-white' : 'bg-slate-200 text-slate-500'}`}>3</div>
             </div>
 
             {error && (
@@ -265,6 +284,59 @@ const ListPropertyPage = () => {
                     </div>
                 )}
 
+                {step === 3 && (
+                    <div className="space-y-6">
+                        <h2 className="text-xl font-bold mb-4">Select Amenities</h2>
+
+                        {/* New Amenity Creation */}
+                        <div className="flex gap-2 mb-4">
+                            <input
+                                type="text"
+                                value={newAmenityName}
+                                onChange={(e) => setNewAmenityName(e.target.value)}
+                                placeholder="Add new amenity (e.g. Gym)"
+                                className="flex-1 p-2 border border-slate-300 rounded"
+                            />
+                            <button
+                                onClick={async () => {
+                                    if (!newAmenityName.trim()) return;
+                                    try {
+                                        const newAm = await propertyService.createAmenity(newAmenityName);
+                                        setAmenities(prev => [...prev, newAm]);
+                                        setSelectedAmenities(prev => new Set(prev).add(newAm.id));
+                                        setNewAmenityName('');
+                                    } catch (e) {
+                                        console.error("Failed to add amenity", e);
+                                        // Optional: setError("Failed to add amenity");
+                                    }
+                                }}
+                                className="px-4 py-2 bg-slate-800 text-white rounded hover:bg-slate-700"
+                            >
+                                Add
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            {amenities.map(amenity => (
+                                <label key={amenity.id} className="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-slate-50">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedAmenities.has(amenity.id)}
+                                        onChange={(e) => {
+                                            const newSet = new Set(selectedAmenities);
+                                            if (e.target.checked) newSet.add(amenity.id);
+                                            else newSet.delete(amenity.id);
+                                            setSelectedAmenities(newSet);
+                                        }}
+                                        className="w-5 h-5 text-primary rounded"
+                                    />
+                                    <span>{amenity.name}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 <div className="mt-8 flex justify-between">
                     {step > 1 && (
                         <button
@@ -279,7 +351,7 @@ const ListPropertyPage = () => {
                         disabled={loading}
                         className={`ml-auto px-8 py-2 bg-primary text-white rounded font-medium hover:bg-primary-dark ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
-                        {loading ? 'Processing...' : (step === 2 ? 'Publish Listing' : 'Next Step')}
+                        {loading ? 'Processing...' : (step === 3 ? 'Publish Listing' : 'Next Step')}
                     </button>
                 </div>
             </div>

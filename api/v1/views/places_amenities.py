@@ -10,9 +10,7 @@ from flask import abort, jsonify, make_response, request
 from flask_jwt_extended import jwt_required
 
 
-#@swag_from('documentation/place_amenity/get_places_amenities.yml',
-#methods=['GET'])
-@app_views.route('places/<place_id>/amenities', methods=['GET'],
+@app_views.route('/places/<place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
 @jwt_required()
 def get_place_amenities(place_id):
@@ -33,8 +31,6 @@ def get_place_amenities(place_id):
     return jsonify(amenities)
 
 
-#@swag_from('documentation/place_amenity/delete_place_amenities.yml',
-           #methods=['DELETE'])
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['DELETE'], strict_slashes=False)
 @jwt_required()
@@ -65,8 +61,6 @@ def delete_place_amenity(place_id, amenity_id):
     return make_response(jsonify({}), 200)
 
 
-#@swag_from('documentation/place_amenity/post_place_amenities.yml',
-#           methods=['POST'])
 @app_views.route('/places/<place_id>/amenities/<amenity_id>', methods=['POST'],
                  strict_slashes=False)
 @jwt_required()
@@ -84,16 +78,15 @@ def post_place_amenity(place_id, amenity_id):
     if not amenity:
         abort(404)
 
-    if environ.get('HBNB_TYPE_STORAGE') == "db":
-        if amenity in place.amenities:
-            return make_response(jsonify(amenity.to_dict()), 200)
-        else:
-            place.amenities.append(amenity)
+    if amenity in place.amenities:
+        return make_response(jsonify(amenity.to_dict()), 200)
     else:
-        if amenity_id in place.amenity_ids:
-            return make_response(jsonify(amenity.to_dict()), 200)
-        else:
-            place.amenity_ids.append(amenity_id)
+        place.amenities.append(amenity)
+    # else:
+        # if amenity_id in place.amenity_ids:
+            # return make_response(jsonify(amenity.to_dict()), 200)
+        # else:
+            #place.amenity_ids.append(amenity_id)
 
     storage.save()
     return make_response(jsonify(amenity.to_dict()), 201)

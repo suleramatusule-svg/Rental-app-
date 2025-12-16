@@ -105,13 +105,56 @@ export const propertyService = {
     },
 
     fetchAmenities: async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`${API_BASE_URL}/amenities`);
+            const response = await fetch(`${API_BASE_URL}/amenities`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error('Failed to fetch amenities');
             return await response.json();
         } catch (error) {
             console.error("API Error:", error);
             return [];
+        }
+    },
+
+    createAmenity: async (name) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/amenities`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name })
+        });
+        if (!response.ok) throw new Error('Failed to create amenity');
+        return await response.json();
+    },
+
+    linkAmenityToPlace: async (placeId, amenityId) => {
+        const token = localStorage.getItem('token');
+        try {
+            console.log(`Linking amenity ${amenityId} to place ${placeId}`);
+            const response = await fetch(`${API_BASE_URL}/places/${placeId}/amenities/${amenityId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({}) // Empty body as per API
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`Failed to link amenity. Status: ${response.status}, Response: ${errorText}`);
+                throw new Error(`Failed to link amenity: ${response.status} ${errorText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
         }
     },
 
