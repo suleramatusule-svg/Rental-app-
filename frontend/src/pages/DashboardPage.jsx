@@ -16,16 +16,14 @@ const DashboardPage = () => {
             if (!user) return;
             setLoadingData(true);
             try {
-                // Fetch user's places
-                const placesResp = await fetch(`${API_BASE_URL}/places_search`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}) // Get all
+                // Fetch user's places using the specific endpoint
+                const placesResp = await fetch(`${API_BASE_URL}/users/${user.id}/places`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
                 });
                 if (placesResp.ok) {
-                    const allPlaces = await placesResp.json();
-                    // Filter where user_id matches current user.id
-                    setMyPlaces(allPlaces.filter(p => p.user_id === user.id));
+                    const myPlacesData = await placesResp.json();
+                    setMyPlaces(myPlacesData);
                 }
 
                 // Reviews are nested in user object from context

@@ -17,18 +17,20 @@ const adaptPlace = (place) => ({
     },
     amenities: place.amenities || [], // Assuming amenities are included or separate call needed
     featured: false,
-    description: place.description
+    description: place.description,
+    user_id: place.user_id,
+    max_guest: place.max_guest,
+    price_by_night: place.price_by_night
 });
 
 export const propertyService = {
     fetchProperties: async (filters = {}) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/places_search`, {
-                method: 'POST',
+            const response = await fetch(`${API_BASE_URL}/places`, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}) // Empty body returns all places
+                }
             });
 
             if (!response.ok) throw new Error('Failed to fetch properties');
@@ -56,8 +58,13 @@ export const propertyService = {
     },
 
     getPropertyDetails: async (id) => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`${API_BASE_URL}/places/${id}`);
+            const response = await fetch(`${API_BASE_URL}/places/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error('Failed to fetch property details');
             const data = await response.json();
             return adaptPlace(data);
@@ -109,8 +116,13 @@ export const propertyService = {
     },
 
     fetchReviews: async (placeId) => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`${API_BASE_URL}/places/${placeId}/reviews`);
+            const response = await fetch(`${API_BASE_URL}/places/${placeId}/reviews`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error('Failed to fetch reviews');
             return await response.json();
         } catch (error) {
