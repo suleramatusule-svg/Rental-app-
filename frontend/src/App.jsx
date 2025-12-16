@@ -7,7 +7,8 @@ import PropertyDetailPage from './pages/PropertyDetailPage';
 import LandingPage from './pages/LandingPage';
 import SettingsPage from './pages/SettingsPage';
 import DashboardPage from './pages/DashboardPage';
-import { LoginPage, SignupPage, ListPropertyPage } from './pages/Placeholders';
+import ListPropertyPage from './pages/ListPropertyPage';
+import { LoginPage, SignupPage } from './pages/Placeholders';
 
 // Protected Route Wrapper
 const RequireAuth = ({ children }) => {

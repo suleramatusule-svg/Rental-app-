@@ -99,20 +99,4 @@ export const SignupPage = () => {
 
 
 
-export const ListPropertyPage = () => (
-    <div className="container mx-auto p-8 max-w-2xl">
-        <h1 className="text-3xl font-bold mb-6">List Your Property</h1>
-        <div className="bg-white p-6 rounded-xl shadow-sm border">
-            <h2 className="text-xl font-bold mb-4">1. Property Details</h2>
-            <div className="space-y-4">
-                <input type="text" placeholder="Property Title" className="w-full p-2 border rounded" />
-                <input type="text" placeholder="Address" className="w-full p-2 border rounded" />
-                <div className="grid grid-cols-2 gap-4">
-                    <input type="number" placeholder="Beds" className="w-full p-2 border rounded" />
-                    <input type="number" placeholder="Baths" className="w-full p-2 border rounded" />
-                </div>
-                <button className="w-full bg-primary text-white py-2 rounded mt-4">Next Step</button>
-            </div>
-        </div>
-    </div>
-);
+

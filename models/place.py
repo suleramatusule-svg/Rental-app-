@@ -32,7 +32,7 @@ class Place(BaseModel, Base):
     price_by_year = Column(Integer, nullable=False, default=0)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    landmarks = Column(String(1024), nullable=False)
+    landmarks = Column(String(1024), nullable=True)
     reviews = relationship("Review",
                             backref="place",
                             cascade="all, delete, delete-orphan")

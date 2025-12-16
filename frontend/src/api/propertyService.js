@@ -82,20 +82,7 @@ export const propertyService = {
         return await response.json();
     },
 
-    createListing: async (data) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/cities/${data.city_id}/places`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            if (!response.ok) throw new Error('Failed to create listing');
-            return await response.json();
-        } catch (error) {
-            console.error("API Error:", error);
-            throw error;
-        }
-    },
+
 
     registerUser: async (userData) => {
         const response = await fetch(`${API_BASE_URL}/users`, {
@@ -129,6 +116,86 @@ export const propertyService = {
         } catch (error) {
             console.error("API Error:", error);
             return []; // Return empty array to verify safe fallback
+        }
+    },
+
+    fetchStates: async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/states`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch states');
+            return await response.json();
+        } catch (error) {
+            console.error("API Error:", error);
+            return [];
+        }
+    },
+
+    fetchCities: async (stateId) => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/states/${stateId}/cities`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) throw new Error('Failed to fetch cities');
+            return await response.json();
+        } catch (error) {
+            console.error("API Error:", error);
+            return [];
+        }
+    },
+
+    createState: async (name) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/states`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name })
+        });
+        if (!response.ok) throw new Error('Failed to create state');
+        return await response.json();
+    },
+
+    createCity: async (stateId, name) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/states/${stateId}/cities`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name })
+        });
+        if (!response.ok) throw new Error('Failed to create city');
+        return await response.json();
+    },
+
+    // Updated createListing to include token
+    createListing: async (data) => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${API_BASE_URL}/cities/${data.city_id}/places`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) throw new Error('Failed to create listing');
+            return await response.json();
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
         }
     }
 };
